@@ -21,19 +21,19 @@ You need JQuerry and the script it self
 ```
 
 ###Required HTML structure
-You neeed a navigation something like this
+You neeed a navigation, something like this
 
 ```html
-    <div id="navBar">
-        <img src="drawer.svg" id="drawer"/>
-        <div id="nav">
+<div id="navBar">
+    <img src="drawer.svg" id="drawer"/>
+    <div id="nav">
 
-            <a class="active">Profile</a>
-            <a href="devices.html">Devices</a>
-            <a href="link.html">Link</a>
+        <a class="active">Profile</a>
+        <a href="devices.html">Devices</a>
+        <a href="link.html">Link</a>
 
-        </div>
     </div>
+</div>
 ```
 
 ```css
@@ -66,15 +66,17 @@ and (max-width : 700px) {
 
 
 ###Initialization
-This lines are in the files
+This lines are in the file
 ```javascript
+...
   var navigation = '#navBar';     // Id from nav container
   var drawerIcon = '#drawerIcon'; // Id from drawericon
   var width = 295;                // Width of nav container
   var threshold = 170;            // At which point should auto open
-
+  
   // Do this to "hide" the navigationbar
   $(navigation).css("marginLeft",'-'+width+'px');
+...
 ```
 
 ##License
