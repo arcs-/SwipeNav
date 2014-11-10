@@ -5,15 +5,16 @@ SwipeNav
 
 ## Introduction
 SwipeNav gives you the ability to transform your right navigationbar in a more mobile friendly version. (Picture above)
-This script is very simple to use and small. Hoverever while it's so small, it dosen't can do anything you might like.
+This script is very simple to use and small. However while it's small, it also can't do anything you might like.
 
 ### Help
 Please don't hesitate to contact me with any questions!
+patrick@stillhart.biz
 
 ##Usage
 
 ###Including files
-You need JQuerry and the plugin it self
+You need JQuerry and the script it self
 ```html
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type=text/javascript src=js/swipeNav.min.js></script>
@@ -37,7 +38,6 @@ You neeed a navigation something like this
 
 ```css
 #navBar {
-    top:0;
     width: 320px;
     height: 100%;
     background: #333;
@@ -50,8 +50,7 @@ You neeed a navigation something like this
 
 
 @media only screen
-and (max-width : 1000px) {
-
+and (max-width : 700px) {
     #navBar {
         width: 295px;
     }
@@ -60,7 +59,6 @@ and (max-width : 1000px) {
         display: inline;
         position: absolute;
         width: 45px;
-        margin-top: -1px;
         margin-left: 295px;
     }
 }
@@ -68,14 +66,14 @@ and (max-width : 1000px) {
 
 
 ###Initialization
-This lines are also in the files
+This lines are in the files
 ```javascript
-  var navigation = '#navBar'; // Id from nav container
+  var navigation = '#navBar';     // Id from nav container
   var drawerIcon = '#drawerIcon'; // Id from drawericon
-  var width = 295;            // Width of nav container
-  var threshold = 170;        // At which point should open
+  var width = 295;                // Width of nav container
+  var threshold = 170;            // At which point should auto open
 
-  // Do this to hide the navigationbar
+  // Do this to "hide" the navigationbar
   $(navigation).css("marginLeft",'-'+width+'px');
 ```
 
