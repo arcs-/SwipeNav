@@ -9,7 +9,7 @@ This script is very simple to use and small. However while it's small, it also c
 
 ### Help
 Please don't hesitate to contact me with any questions!
-patrick@stillhart.biz
+help@stillhart.biz
 
 ##Usage
 
