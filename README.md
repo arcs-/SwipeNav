@@ -4,7 +4,8 @@ SwipeNav
 ![Example Picture](https://stillhart.biz/project/swipeNav/banner.jpg)
 
 ## Introduction
-SwipeNav is a simple Javascriptthat that transforms your right navigationbar in a more mobile friendly version.
+SwipeNav gives you the ability to transform your right navigationbar in a more mobile friendly version. (Picture above)
+This script is very simple to use and small. Hoverever while it's so small, it dosen't can do anything you might like.
 
 ### Help
 Please don't hesitate to contact me with any questions!
@@ -43,7 +44,7 @@ You neeed a navigation something like this
     position: fixed;
 }
 
-#drawer {
+#drawerIcon {
     display:none;
 }
 
@@ -55,7 +56,7 @@ and (max-width : 1000px) {
         width: 295px;
     }
 
-    #drawer {
+    #drawerIcon {
         display: inline;
         position: absolute;
         width: 45px;
@@ -67,10 +68,10 @@ and (max-width : 1000px) {
 
 
 ###Initialization
-In the File
+This lines are also in the files
 ```javascript
   var navigation = '#navBar'; // Id from nav container
-  var drawerIcon = '#drawer'; // Id from drawericon
+  var drawerIcon = '#drawerIcon'; // Id from drawericon
   var width = 295;            // Width of nav container
   var threshold = 170;        // At which point should open
 
