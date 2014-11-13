@@ -14,64 +14,148 @@
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
  **/
-window.addEventListener('load', function(){
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-        /* -- Setup -- */
-        var navigation = '#navBar'; // Id from nav container
-        var drawerIcon = '#drawer'; // Id from drawericon
-        var width = 295;            // Width of nav container
-        var threshold = 170;        // At which point should open
+/* -- Setup -- */
+var navigation = '#navBar'; // Id from nav container
+var drawerIcon = '#drawer'; // Id from drawericon (to pull out the drawer)(optional)
+var width = 295; // Width of nav container
+var threshold = 170; // At which point should open
+var maxDrawerScreenSize = 1000; // At which point should open
+/* -- End Setup -- */
 
-        $(navigation).css("marginLeft",'-'+width+'px');
-        /* -- End Setup -- */
-        var startX, startY = 0;
-        var fingerDown, moved, isOpen = false;
+window.onresize = function(event) {
+    checkSize();
+};
+window.onload = function(event) {
+    checkSize();
+};
 
-        // Finger Down
-        window.addEventListener('touchstart', function (event) {
-            startX = event.changedTouches[0].pageX;
-            startY = event.changedTouches[0].pageY;
-            fingerDown = true;
-        }, false)
+/**
+	Check if large screen or not
+*/
+function checkSize() {
+    var hight = $(window).width();
+    if (maxDrawerScreenSize >= hight)
+        initSwipeNav();
+    else
+        destroySwipeNav();
+}
 
-        // Finger move
-        window.addEventListener('touchmove', function (event) {
-            if (fingerDown) {
-                moved = true;
-                var distanceX = Math.abs(event.changedTouches[0].pageX - startX);
-                var distanceY = Math.abs(event.changedTouches[0].pageY - startY);
-                if (distanceX < width && distanceX > 15 && distanceX > distanceY + 80 ) {
-                    if (event.changedTouches[0].pageX - startX > 0) $(navigation).css('left', distanceX + 'px');
-                    else if (!isOpen) $(navigation).css('left', width - startX + event.changedTouches[0].pageX + 'px');
-                    event.preventDefault();
-                }
-            }
-        }, false)
+/**
+	Destroys the listener (for small screen)
+*/
+function initSwipeNav() {
+    $(navigation).css("marginLeft", '-' + width + 'px');
 
-        // Finger up
-        window.addEventListener('touchend', function (event) {
-            if (moved && event.changedTouches[0].pageX - startX > threshold) open();
-            else if(moved) close();
-            moved = fingerDown = false;
-        }, false)
+    window.addEventListener('touchstart', onTouchStart);
+    window.addEventListener('touchmove', onTouchMove);
+    window.addEventListener('touchend', onTouchEnd);
 
-        $(drawerIcon).click(function(e){
-            if(isOpen)close();
-            else open();
-        });
+    window.addEventListener('mousedown', onTouchStart);
+    window.addEventListener('mousemove', onTouchMove);
+    window.addEventListener('mouseup', onTouchEnd);
 
-        function close() {
-            isOpen = false;
-            $(navigation).animate({
-                left: '0'
-            });
-        }
+    $(drawerIcon).bind("click", switchDrawerState);
 
-        function open() {
-            isOpen = true;
-            $(navigation).animate({
-                left: width + 'px'
-            });
+}
+
+/**
+	Destroys the listener (for large screen)
+*/
+function destroySwipeNav() {
+    $(navigation).css("marginLeft", '0');
+
+    window.removeEventListener('touchstart', onTouchStart);
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('touchend', onTouchEnd);
+
+    window.removeEventListener('mousedown', onTouchStart);
+    window.removeEventListener('mousemove', onTouchMove);
+    window.removeEventListener('mouseup', onTouchEnd);
+
+    $(drawerIcon).unbind("click", switchDrawerState);
+}
+
+var startX, startY;
+var fingerDown, moved, isOpen;
+
+/**
+	Gets fired on finger down
+*/
+function onTouchStart(event) {
+    startX = getX();
+    startY = getY();
+    fingerDown = true;
+}
+
+/**
+	Gets fired on finger move
+*/
+function onTouchMove(event) {
+    if (fingerDown) {
+        moved = true;
+        var distanceX = Math.abs(getX() - startX);
+        var distanceY = Math.abs(getY() - startY);
+        if (distanceX < width && distanceX > 15 && distanceX > distanceY + 80) {
+            if (getX() - startX > 0) $(navigation).css('left', distanceX + 'px');
+            else if (!isOpen) $(navigation).css('left', width - startX + getX() + 'px');
+            window.getSelection().removeAllRanges();
+            event.preventDefault();
         }
     }
-}, false)
+}
+
+/**
+	Gets fired on finger leave
+*/
+function onTouchEnd() {
+    if (moved && getX() - startX > threshold){ 
+		open();
+		window.getSelection().removeAllRanges()
+    }else if (moved){ 
+		close();
+		window.getSelection().removeAllRanges()
+	}
+    moved = fingerDown = false;
+}
+
+/**
+	Open or closes the navigation
+*/
+function switchDrawerState() {
+    if (isOpen) close();
+    else open();
+}
+
+/**
+	Closes the navigation
+*/
+function close() {
+    isOpen = false;
+    $(navigation).animate({
+        left: '0'
+    });
+}
+
+/**
+	Opens the navigation
+*/
+function open() {
+    isOpen = true;
+    $(navigation).animate({
+        left: width + 'px'
+    });
+}
+
+/**
+	Get X for touch and mouse device
+*/
+function getX() {
+    return event.pageX || event.changedTouches[0].pageX;
+}
+
+/**
+	Get Y for touch and mouse device
+*/
+function getY() {
+    return event.pageY || event.changedTouches[0].pageY;
+}
