@@ -15,33 +15,45 @@
  all copies or substantial portions of the Software.
  **/
 /* -- Setup -- */
+var enableDesktop = false; // Enables this also for desktop browser
 var navigation = '#navBar'; // Id from nav container
 var drawerIcon = '#drawer'; // Id from drawericon (to pull out the drawer)(optional)
 var width = 295; // Width of nav container
 var threshold = 170; // At which point should open
-var maxDrawerScreenSize = 1000; // At which point should open
+var maxDrawerScreenSize = 1000; // At which point is desktop vision
 /* -- End Setup -- */
 
-window.onresize = function(event) {
-    checkSize();
-};
 window.onload = function(event) {
-    checkSize();
+	if(!enableDesktop) {
+		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		 onMobile = true;
+		 console.log(true);
+		}
+	} else {
+		onMobile = true;
+		 console.log(true)
+	}
+	
+    if(onMobile) checkSize();
+};
+
+window.onresize = function(event) {
+    if(onMobile) checkSize();
 };
 
 /**
 	Check if large screen or not
 */
 function checkSize() {
-    var hight = $(window).width();
-    if (maxDrawerScreenSize >= hight)
+    var width = $(window).width();
+    if (maxDrawerScreenSize >= width)
         initSwipeNav();
     else
         destroySwipeNav();
 }
 
 /**
-	Destroys the listener (for small screen)
+	set the listener (for small screen)
 */
 function initSwipeNav() {
     $(navigation).css("marginLeft", '-' + width + 'px');
@@ -63,6 +75,7 @@ function initSwipeNav() {
 */
 function destroySwipeNav() {
     $(navigation).css("marginLeft", '0');
+	$(navigation).css('left', '0');
 
     window.removeEventListener('touchstart', onTouchStart);
     window.removeEventListener('touchmove', onTouchMove);
@@ -76,7 +89,7 @@ function destroySwipeNav() {
 }
 
 var startX, startY;
-var fingerDown, moved, isOpen;
+var fingerDown, moved, isOpen, tempState, onMobile;
 
 /**
 	Gets fired on finger down
@@ -85,6 +98,7 @@ function onTouchStart(event) {
     startX = getX();
     startY = getY();
     fingerDown = true;
+	tempState = isOpen;
 }
 
 /**
@@ -96,10 +110,16 @@ function onTouchMove(event) {
         var distanceX = Math.abs(getX() - startX);
         var distanceY = Math.abs(getY() - startY);
         if (distanceX < width && distanceX > 15 && distanceX > distanceY + 80) {
-            if (getX() - startX > 0) $(navigation).css('left', distanceX + 'px');
-            else if (!isOpen) $(navigation).css('left', width - startX + getX() + 'px');
-            window.getSelection().removeAllRanges();
-            event.preventDefault();
+            if (getX() - startX > 0 ){ 
+				$(navigation).css('left', distanceX + 'px'); 
+				window.getSelection().removeAllRanges();
+				event.preventDefault();
+			} else if (isOpen){ 
+				$(navigation).css('left', width - startX + getX() + 'px');
+				window.getSelection().removeAllRanges();
+				event.preventDefault();
+			}
+            
         }
     }
 }
@@ -110,10 +130,10 @@ function onTouchMove(event) {
 function onTouchEnd() {
     if (moved && getX() - startX > threshold){ 
 		open();
-		window.getSelection().removeAllRanges()
+		if(tempState != isOpen) window.getSelection().removeAllRanges()
     }else if (moved){ 
 		close();
-		window.getSelection().removeAllRanges()
+		if(tempState != isOpen) window.getSelection().removeAllRanges()
 	}
     moved = fingerDown = false;
 }
