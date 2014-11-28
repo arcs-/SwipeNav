@@ -27,11 +27,9 @@ window.onload = function(event) {
 	if(!enableDesktop) {
 		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 		 onMobile = true;
-		 console.log(true);
 		}
 	} else {
 		onMobile = true;
-		 console.log(true)
 	}
 	
     if(onMobile) checkSize();
